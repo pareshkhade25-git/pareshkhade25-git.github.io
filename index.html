@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paresh Khade — Data Analyst &amp; BI Developer</title>
+<meta name="description" content="Paresh Khade — Senior Analyst building Power BI and Tableau dashboards, ETL pipelines and SQL analytics.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #f3f5f8;
+    --surface: #ffffff;
+    --surface-2: #f7f9fb;
+    --border: #e2e6ec;
+    --grid: #edf0f4;
+    --text: #14181f;
+    --text-2: #4a5260;
+    --muted: #6b7280;
+    --accent: #2a78d6;
+    --accent-soft: #e8f1fc;
+    --accent-ink: #1d5fae;
+    --bar: #2a78d6;
+    --shadow: 0 1px 2px rgba(16,24,40,.05), 0 4px 16px rgba(16,24,40,.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #101317; --surface: #181c22; --surface-2: #1d222a; --border: #2a303a; --grid: #242a33;
+      --text: #eef1f5; --text-2: #c2c8d2; --muted: #8e97a5;
+      --accent: #3987e5; --accent-soft: #1b2a3f; --accent-ink: #8fbcf2; --bar: #3987e5;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #101317; --surface: #181c22; --surface-2: #1d222a; --border: #2a303a; --grid: #242a33;
+    --text: #eef1f5; --text-2: #c2c8d2; --muted: #8e97a5;
+    --accent: #3987e5; --accent-soft: #1b2a3f; --accent-ink: #8fbcf2; --bar: #3987e5;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 15.5px; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  a { color: var(--accent-ink); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- top bar: report page tabs ---------- */
+  .topbar { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--surface) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); }
+  .topbar .wrap { display: flex; align-items: center; gap: 24px; height: 60px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--text); white-space: nowrap; }
+  .logo { width: 30px; height: 30px; border-radius: 8px; background: var(--accent); display: grid; place-items: center; }
+  .logo span { display: flex; gap: 2px; align-items: flex-end; height: 14px; }
+  .logo i { display: block; width: 3px; background: #fff; border-radius: 1px 1px 0 0; }
+  .tabs { display: flex; gap: 4px; margin-left: auto; overflow-x: auto; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs a { color: var(--text-2); font-size: 14px; font-weight: 500; padding: 7px 12px; border-radius: 8px; white-space: nowrap; }
+  .tabs a:hover { background: var(--surface-2); text-decoration: none; }
+  .tabs a.active { color: var(--accent-ink); background: var(--accent-soft); }
+
+  /* ---------- hero ---------- */
+  .hero { display: grid; grid-template-columns: 1.35fr 1fr; gap: 32px; align-items: center; padding: 56px 0 24px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--accent-ink); background: var(--accent-soft); padding: 4px 12px; border-radius: 999px; }
+  .eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+  h1 { font-size: clamp(36px, 6vw, 56px); line-height: 1.05; letter-spacing: -1.5px; margin: 16px 0 8px; font-weight: 800; }
+  .role { font-size: clamp(17px, 2.3vw, 21px); color: var(--text-2); font-weight: 500; margin: 0 0 16px; }
+  .lead { color: var(--text-2); margin: 0 0 24px; max-width: 600px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; padding: 10px 16px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+  .btn:hover { border-color: var(--accent); text-decoration: none; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn svg { width: 16px; height: 16px; }
+
+  .kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; box-shadow: var(--shadow); }
+  .kpi .label { font-size: 12.5px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+  .kpi .value { font-size: 36px; font-weight: 800; letter-spacing: -1px; line-height: 1.15; margin-top: 4px; font-variant-numeric: tabular-nums; }
+  .kpi .note { font-size: 13px; color: var(--text-2); }
+
+  /* ---------- panels ---------- */
+  section { padding: 28px 0; }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 26px 28px; box-shadow: var(--shadow); }
+  .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+  h2 { font-size: 22px; letter-spacing: -.4px; margin: 0; }
+  .sec-head p { margin: 0; color: var(--muted); font-size: 14px; }
+  .about p { color: var(--text-2); margin: 0 0 12px; max-width: 880px; }
+  .about p:last-child { margin: 0; }
+
+  .skills { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .skill-group { background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+  .skill-group h3 { font-size: 14px; margin: 0 0 10px; display: flex; align-items: center; gap: 8px; }
+  .skill-group h3 svg { width: 18px; height: 18px; color: var(--accent); flex: none; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: 13px; background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 3px 10px; border-radius: 999px; }
+
+  /* slicer */
+  .slicer { display: inline-flex; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 3px; gap: 2px; }
+  .slicer button { font: inherit; font-size: 13.5px; font-weight: 600; color: var(--text-2); background: transparent; border: 0; padding: 6px 14px; border-radius: 8px; cursor: pointer; }
+  .slicer button[aria-pressed="true"] { background: var(--surface); color: var(--accent-ink); box-shadow: var(--shadow); }
+
+  .projects { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .project { border: 1px solid var(--border); border-radius: 14px; padding: 20px 22px; background: var(--surface); display: flex; flex-direction: column; transition: border-color .2s, transform .2s; }
+  .project:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .project[hidden] { display: none; }
+  .project .domain { font-size: 12px; font-weight: 600; color: var(--accent-ink); background: var(--accent-soft); padding: 2px 10px; border-radius: 999px; align-self: flex-start; }
+  .project h3 { font-size: 17px; margin: 10px 0 6px; letter-spacing: -.2px; }
+  .project p { color: var(--text-2); font-size: 14.5px; margin: 0 0 12px; }
+  .project .lbl { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+  .project ul { margin: 0 0 14px; padding-left: 18px; color: var(--text-2); font-size: 14px; }
+  .project li { margin-bottom: 3px; }
+  .project .chips { margin-top: auto; }
+
+  /* timeline chart */
+  .chart { position: relative; }
+  .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .chart .axis text { fill: var(--muted); font-size: 12px; }
+  .chart .gridline { stroke: var(--grid); stroke-width: 1; }
+  .chart .rowlabel { fill: var(--text); font-size: 13px; font-weight: 600; }
+  .chart .rowsub { fill: var(--muted); font-size: 12px; }
+  .chart .bar { fill: var(--bar); }
+  .chart .hit { fill: transparent; cursor: pointer; }
+  .chart .hit:focus { outline: none; }
+  .chart g.row.dim .bar { opacity: .35; }
+  .tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); box-shadow: 0 6px 24px rgba(16,24,40,.14); border-radius: 10px; padding: 10px 12px; font-size: 13px; min-width: 190px; opacity: 0; transform: translateY(4px); transition: opacity .12s, transform .12s; z-index: 5; }
+  .tip.show { opacity: 1; transform: none; }
+  .tip b { display: block; font-size: 13.5px; }
+  .tip span { color: var(--text-2); display: block; }
+  .roles { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 12px; }
+  .roles li { display: grid; grid-template-columns: 170px 1fr; gap: 16px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .roles .when { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .roles .what b { display: block; }
+  .roles .what span { color: var(--text-2); font-size: 14.5px; }
+  .sr-table { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+  .edu { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .edu-card { border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; background: var(--surface-2); }
+  .edu-card .yr { font-size: 13px; color: var(--muted); }
+  .edu-card b { display: block; margin: 2px 0; }
+  .edu-card span { color: var(--text-2); font-size: 14px; }
+  .edu-card .score { display: inline-block; margin-top: 8px; font-size: 13px; font-weight: 700; color: var(--accent-ink); background: var(--accent-soft); padding: 2px 10px; border-radius: 6px; }
+
+  .contact { text-align: center; padding: 40px 28px; }
+  .contact h2 { font-size: 26px; margin-bottom: 8px; }
+  .contact p { color: var(--text-2); margin: 0 0 20px; }
+  .contact .actions { justify-content: center; }
+  footer { text-align: center; color: var(--muted); font-size: 13px; padding: 24px 0 40px; }
+
+  .reveal { opacity: 0; transform: translateY(12px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; padding-top: 36px; }
+    .skills { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 640px) {
+    .wrap { padding: 0 16px; }
+    .brand .full { display: none; }
+    .topbar .wrap { gap: 12px; }
+    .panel { padding: 20px 18px; }
+    .skills, .projects, .edu { grid-template-columns: 1fr; }
+    .kpi .value { font-size: 30px; }
+    .roles li { grid-template-columns: 1fr; gap: 2px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .project, .tip { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="#overview"><span class="logo" aria-hidden="true"><span><i style="height:6px"></i><i style="height:10px"></i><i style="height:14px"></i></span></span><span>Paresh <span class="full">Khade</span></span></a>
+    <nav class="tabs" aria-label="Sections">
+      <a href="#overview" class="active">Overview</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#education">Education</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="overview" class="hero">
+    <div>
+      <span class="eyebrow">Open to data analyst &amp; BI roles · Pune, India</span>
+      <h1>Paresh Khade</h1>
+      <p class="role">Senior Analyst · Data Visualization &amp; Business Intelligence</p>
+      <p class="lead">I turn complex data into dashboards that people use to make decisions. I design, build and deploy interactive reports in Power BI and Tableau, backed by clean SQL, reliable ETL and data quality checks.</p>
+      <div class="actions">
+        <a class="btn primary" href="resume.pdf" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>Download resume</a>
+        <a class="btn" href="https://www.linkedin.com/in/paresh-khade" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.5c0-1.3-.02-3-1.83-3-1.83 0-2.11 1.43-2.11 2.9V21H9z"/></svg>LinkedIn</a>
+        <a class="btn" href="mailto:pareshkhade25@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Email me</a>
+      </div>
+    </div>
+    <div class="kpis" aria-label="Career summary">
+      <div class="kpi reveal"><div class="label">Experience</div><div class="value">4+ yrs</div><div class="note">BI &amp; data visualization</div></div>
+      <div class="kpi reveal"><div class="label">Companies</div><div class="value" data-count="4">4</div><div class="note">Nagarro, Infosys, SRS, Accenture</div></div>
+      <div class="kpi reveal"><div class="label">Client projects</div><div class="value" data-count="4">4</div><div class="note">US healthcare · UK banking</div></div>
+      <div class="kpi reveal"><div class="label">BI platforms</div><div class="value" data-count="2">2</div><div class="note">Power BI · Tableau</div></div>
+    </div>
+  </section>
+
+  <section class="about reveal">
+    <div class="panel">
+      <div class="sec-head"><h2>About me</h2></div>
+      <p>I'm a Senior Analyst focused on business intelligence and data visualization. At Nagarro I work on US healthcare analytics, building Tableau and Power BI dashboards that track brand performance, sales, market share, campaign promotion and patient engagement for business stakeholders.</p>
+      <p>My work covers the full path from raw data to decision: moving data from AWS S3 into Databricks and PostgreSQL with Matillion, preparing it with Tableau Prep, analyzing it with SQL, validating it with quality checks and governing it in Collibra, then presenting it in dashboards that stay fast on high data volumes. I work in Agile sprints and stay close to stakeholders so every report answers a real business question.</p>
+    </div>
+  </section>
+
+  <section id="skills" class="reveal">
+    <div class="panel">
+      <div class="sec-head"><h2>Skills &amp; tools</h2><p>Grouped by where they sit in the analytics workflow</p></div>
+      <div class="skills">
+        <div class="skill-group">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>BI &amp; Visualization</h3>
+          <div class="chips"><span class="chip">Power BI</span><span class="chip">Tableau</span><span class="chip">Data Visualization</span><span class="chip">Dashboard Design</span><span class="chip">KPI Reporting</span></div>
+        </div>
+        <div class="skill-group">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>Data &amp; SQL</h3>
+          <div class="chips"><span class="chip">SQL</span><span class="chip">PostgreSQL</span><span class="chip">Advanced Excel</span><span class="chip">Ad-hoc Analysis</span></div>
+        </div>
+        <div class="skill-group">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h11l-3-3M20 17H9l3 3"/></svg>ETL &amp; Data Prep</h3>
+          <div class="chips"><span class="chip">ETL</span><span class="chip">Matillion</span><span class="chip">Tableau Prep</span></div>
+        </div>
+        <div class="skill-group">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 01-.5-8A6 6 0 0118 9a4.5 4.5 0 01-.5 9z"/></svg>Cloud &amp; Platforms</h3>
+          <div class="chips"><span class="chip">AWS S3</span><span class="chip">Azure Databricks</span></div>
+        </div>
+        <div class="skill-group">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>Quality &amp; Governance</h3>
+          <div class="chips"><span class="chip">Data Quality Assurance</span><span class="chip">Collibra</span><span class="chip">Data Lineage</span></div>
+        </div>
+        <div class="skill-group">
+          <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5M16 5a3 3 0 010 6M21 20c0-2.5-1.5-4.3-4-4.8"/></svg>Ways of Working</h3>
+          <div class="chips"><span class="chip">Agile / Scrum</span><span class="chip">Jira</span><span class="chip">Confluence</span><span class="chip">Python</span><span class="chip">Java</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects" class="reveal">
+    <div class="panel">
+      <div class="sec-head">
+        <h2>Featured projects</h2>
+        <div class="slicer" role="group" aria-label="Filter projects by industry">
+          <button type="button" data-filter="all" aria-pressed="true">All</button>
+          <button type="button" data-filter="healthcare" aria-pressed="false">Healthcare</button>
+          <button type="button" data-filter="banking" aria-pressed="false">Banking</button>
+        </div>
+      </div>
+      <div class="projects">
+        <article class="project" data-domain="healthcare">
+          <span class="domain">US Healthcare</span>
+          <h3>Brand Performance &amp; Promotion Analytics</h3>
+          <p>Brand performance across sales, units sold and market share, plus campaign promotion through calls, emails, programs and customer engagement, and patient support analysis.</p>
+          <div class="lbl">What I did</div>
+          <ul>
+            <li>Developed Tableau and Power BI dashboards to track business KPIs and support decisions.</li>
+            <li>Built Matillion ETL from AWS S3 into Databricks and PostgreSQL; prepared data with Tableau Prep.</li>
+            <li>Wrote SQL for analysis and ran quality checks to keep reporting accurate.</li>
+          </ul>
+          <div class="chips"><span class="chip">Power BI</span><span class="chip">Tableau</span><span class="chip">SQL</span><span class="chip">Matillion</span><span class="chip">AWS S3</span><span class="chip">Databricks</span><span class="chip">PostgreSQL</span><span class="chip">Collibra</span></div>
+        </article>
+        <article class="project" data-domain="healthcare">
+          <span class="domain">US Healthcare</span>
+          <h3>Brand Performance &amp; Demand Analytics</h3>
+          <p>Brand performance across sales, units sold, demand, inventory and market share, with campaign promotion and patient engagement analysis.</p>
+          <div class="lbl">What I did</div>
+          <ul>
+            <li>Designed Tableau dashboards with actionable insights for each brand.</li>
+            <li>Optimized dashboards for high data volumes and complex visualizations.</li>
+            <li>Led development with the team and resolved delivery issues.</li>
+          </ul>
+          <div class="chips"><span class="chip">Tableau</span><span class="chip">SQL</span><span class="chip">Excel</span><span class="chip">Jira</span><span class="chip">Confluence</span></div>
+        </article>
+        <article class="project" data-domain="banking">
+          <span class="domain">UK Banking</span>
+          <h3>Process Efficiency Analytics</h3>
+          <p>Showed individual contributions across the project so stakeholders could find process bottlenecks and see the time spent on each activity.</p>
+          <div class="lbl">What I did</div>
+          <ul>
+            <li>Analyzed process data to identify bottlenecks and inefficiencies.</li>
+            <li>Designed Tableau dashboards on team performance.</li>
+            <li>Optimized SQL queries for faster data extraction and analysis.</li>
+          </ul>
+          <div class="chips"><span class="chip">Tableau</span><span class="chip">SQL</span><span class="chip">Excel</span><span class="chip">Jira</span><span class="chip">Confluence</span></div>
+        </article>
+        <article class="project" data-domain="healthcare">
+          <span class="domain">US Healthcare</span>
+          <h3>E-commerce Sales &amp; KPI Analytics</h3>
+          <p>Real-time insight into e-commerce sales metrics and KPIs to improve platform performance and customer experience.</p>
+          <div class="lbl">What I did</div>
+          <ul>
+            <li>Built interactive Tableau dashboards for sales metrics and customer trends.</li>
+            <li>Tracked revenue growth, customer acquisition and cart abandonment.</li>
+            <li>Ran root cause analysis; tuned SQL and data models for speed.</li>
+          </ul>
+          <div class="chips"><span class="chip">Tableau</span><span class="chip">SQL</span><span class="chip">Jira</span><span class="chip">Confluence</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience" class="reveal">
+    <div class="panel">
+      <div class="sec-head"><h2>Career timeline</h2><p>Hover a bar for role and duration</p></div>
+      <div class="chart" id="timeline">
+        <div class="tip" id="tip" role="status" aria-live="polite"></div>
+      </div>
+      <table class="sr-table" id="timeline-table"><caption>Career timeline</caption><thead><tr><th>Company</th><th>Role</th><th>From</th><th>To</th></tr></thead><tbody></tbody></table>
+      <ul class="roles">
+        <li><div class="when">Jan 2025 – Present</div><div class="what"><b>Senior Engineer · Nagarro</b><span>Tableau and Power BI dashboards for business KPIs, Matillion ETL from AWS S3 into Databricks and PostgreSQL, SQL quality checks, and data governance and lineage in Collibra.</span></div></li>
+        <li><div class="when">Oct 2024 – Jan 2025</div><div class="what"><b>Senior Associate Consultant · Infosys</b><span>Client Tableau dashboards and reports; faster dashboards through optimized data sources, extracts and calculations.</span></div></li>
+        <li><div class="when">Aug 2024 – Oct 2024</div><div class="what"><b>Senior Analyst · SRS Infoway</b><span>Tableau dashboards for business and operational metrics; data cleaning with SQL and Advanced Excel; ad-hoc trend analysis.</span></div></li>
+        <li><div class="when">Oct 2019 – Feb 2021</div><div class="what"><b>Application Development Associate · Accenture</b><span>Tableau dashboards on sales, customer behavior and marketing performance; data preparation with Tableau Prep.</span></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="education" class="reveal">
+    <div class="panel">
+      <div class="sec-head"><h2>Education</h2></div>
+      <div class="edu">
+        <div class="edu-card"><div class="yr">2015 – 2019</div><b>B.E. Computer Science and Engineering</b><span>Smt. Kashibai Navale College of Engineering</span><br><span class="score">CGPA 8.7</span></div>
+        <div class="edu-card"><div class="yr">2021 – 2023</div><b>Diploma in Philosophy</b><span>Indian and Western Philosophy · Tattvagyan Vidyapeeth</span></div>
+        <div class="edu-card"><div class="yr">2015</div><b>Class XII</b><span>Maharashtra State Board</span><br><span class="score">72%</span></div>
+        <div class="edu-card"><div class="yr">2013</div><b>Class X</b><span>Maharashtra State Board</span><br><span class="score">88%</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="reveal">
+    <div class="panel contact">
+      <h2>Let's talk data</h2>
+      <p>Looking for someone to build dashboards your team will actually use? I'd be glad to hear from you.</p>
+      <div class="actions">
+        <a class="btn primary" href="mailto:pareshkhade25@gmail.com">pareshkhade25@gmail.com</a>
+        <a class="btn" href="https://www.linkedin.com/in/paresh-khade" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn" href="resume.pdf" target="_blank" rel="noopener">Resume (PDF)</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>© <span id="yr">2026</span> Paresh Khade · Pune, India</footer>
+
+<script>
+(function () {
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  /* ---------- scroll reveal ---------- */
+  var reveals = Array.prototype.filter.call(document.querySelectorAll('.reveal'), function (r) {
+    if (r.getBoundingClientRect().top < innerHeight) { r.classList.add('in'); return false; }
+    return true;
+  });
+  if (reduce || !('IntersectionObserver' in window)) {
+    reveals.forEach(function (r) { r.classList.add('in'); });
+  } else {
+    var ro = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    reveals.forEach(function (r) { ro.observe(r); });
+  }
+
+  /* ---------- active tab while scrolling ---------- */
+  var tabs = document.querySelectorAll('.tabs a');
+  var ids = Array.prototype.map.call(tabs, function (a) { return a.getAttribute('href').slice(1); });
+  function onScroll() {
+    var cur = ids[0];
+    ids.forEach(function (id) { var el = document.getElementById(id); if (el && el.getBoundingClientRect().top < 140) cur = id; });
+    if (innerHeight + scrollY >= document.body.scrollHeight - 4) cur = ids[ids.length - 1];
+    tabs.forEach(function (a) { a.classList.toggle('active', a.getAttribute('href') === '#' + cur); });
+  }
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  /* ---------- project slicer ---------- */
+  var btns = document.querySelectorAll('.slicer button');
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var f = b.getAttribute('data-filter');
+      btns.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      document.querySelectorAll('.project').forEach(function (p) { p.hidden = !(f === 'all' || p.getAttribute('data-domain') === f); });
+    });
+  });
+
+  /* ---------- career timeline (Gantt) ---------- */
+  var today = new Date();
+  var jobs = [
+    { co: 'Nagarro', role: 'Senior Engineer', from: [2025, 0], to: null },
+    { co: 'Infosys', role: 'Senior Associate Consultant', from: [2024, 9], to: [2025, 0] },
+    { co: 'SRS Infoway', role: 'Senior Analyst', from: [2024, 7], to: [2024, 9] },
+    { co: 'Accenture', role: 'Application Development Associate', from: [2019, 9], to: [2021, 1] }
+  ];
+  var MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function mIndex(ym) { return ym[0] * 12 + ym[1]; }
+  var nowYM = [today.getFullYear(), today.getMonth()];
+  function fmt(ym) { return ym ? MON[ym[1]] + ' ' + ym[0] : 'Present'; }
+  function dur(j) {
+    var m = mIndex(j.to || nowYM) - mIndex(j.from) + 1, y = Math.floor(m / 12), r = m % 12;
+    return (y ? y + (y > 1 ? ' yrs' : ' yr') : '') + (y && r ? ' ' : '') + (r ? r + (r > 1 ? ' mos' : ' mo') : '');
+  }
+
+  var tbody = document.querySelector('#timeline-table tbody');
+  jobs.forEach(function (j) { var tr = document.createElement('tr'); tr.innerHTML = '<td>' + j.co + '</td><td>' + j.role + '</td><td>' + fmt(j.from) + '</td><td>' + fmt(j.to) + '</td>'; tbody.appendChild(tr); });
+
+  var host = document.getElementById('timeline'), tip = document.getElementById('tip');
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(n, a) { var e = document.createElementNS(NS, n); for (var k in a) e.setAttribute(k, a[k]); return e; }
+
+  function draw() {
+    var old = host.querySelector('svg'); if (old) old.remove();
+    var W = Math.max(host.clientWidth, 300), narrow = W < 560;
+    var L = narrow ? 92 : 190, R = 12, T = 8, rowH = narrow ? 40 : 46, barH = 14;
+    var H = T + jobs.length * rowH + 26;
+    var y0 = 2019, y1 = nowYM[0] + 1;
+    var x = function (ym) { return L + (mIndex(ym) - y0 * 12) / ((y1 - y0) * 12) * (W - L - R); };
+    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, width: W, height: H, role: 'img', 'aria-label': 'Career timeline from 2019 to present' });
+
+    var ax = el('g', { class: 'axis' });
+    for (var yr = y0; yr <= y1; yr++) {
+      var gx = x([yr, 0]);
+      ax.appendChild(el('line', { class: 'gridline', x1: gx, x2: gx, y1: T, y2: H - 22 }));
+      if (!narrow || yr % 2 === 1 || yr === y1) { var t = el('text', { x: gx, y: H - 6, 'text-anchor': 'middle' }); t.textContent = yr; ax.appendChild(t); }
+    }
+    svg.appendChild(ax);
+
+    jobs.forEach(function (j, i) {
+      var cy = T + i * rowH + rowH / 2;
+      var g = el('g', { class: 'row' });
+      var lab = el('text', { class: 'rowlabel', x: 0, y: narrow ? cy + 4 : cy - 2 }); lab.textContent = j.co; g.appendChild(lab);
+      if (!narrow) { var sub = el('text', { class: 'rowsub', x: 0, y: cy + 14 }); sub.textContent = dur(j); g.appendChild(sub); }
+      var x0 = x(j.from), x1 = x([ (j.to || nowYM)[0], (j.to || nowYM)[1] + 1 ]);
+      var bw = Math.max(x1 - x0, 6);
+      g.appendChild(el('rect', { class: 'bar', x: x0, y: cy - barH / 2, width: bw, height: barH, rx: 4 }));
+      var hit = el('rect', { class: 'hit', x: Math.min(x0 - 6, x0), y: cy - rowH / 2, width: bw + 12, height: rowH, tabindex: 0, 'aria-label': j.co + ', ' + j.role + ', ' + fmt(j.from) + ' to ' + fmt(j.to) });
+      function show(ev) {
+        g.parentNode.querySelectorAll('g.row').forEach(function (r) { r.classList.toggle('dim', r !== g); });
+        tip.innerHTML = '<b>' + j.role + '</b><span>' + j.co + '</span><span>' + fmt(j.from) + ' – ' + fmt(j.to) + ' · ' + dur(j) + '</span>';
+        var hb = host.getBoundingClientRect(), tw = tip.offsetWidth;
+        var px = ev && ev.clientX ? ev.clientX - hb.left : x0 + bw / 2;
+        tip.style.left = Math.min(Math.max(px - tw / 2, 0), hb.width - tw) + 'px';
+        tip.style.top = (cy - rowH / 2 - tip.offsetHeight - 2) + 'px';
+        tip.classList.add('show');
+      }
+      function hide() { tip.classList.remove('show'); g.parentNode.querySelectorAll('g.row').forEach(function (r) { r.classList.remove('dim'); }); }
+      hit.addEventListener('mousemove', show); hit.addEventListener('mouseleave', hide);
+      hit.addEventListener('focus', function () { show(); }); hit.addEventListener('blur', hide);
+      hit.addEventListener('touchstart', function (e) { show(e.touches[0]); }, { passive: true });
+      g.appendChild(hit);
+      svg.appendChild(g);
+    });
+    host.insertBefore(svg, tip);
+  }
+  draw();
+  var rt; addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(draw, 120); });
+})();
+</script>
+</body>
+</html>
