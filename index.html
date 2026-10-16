@@ -114,27 +114,11 @@
   .project li { margin-bottom: 3px; }
   .project .chips { margin-top: auto; }
 
-  /* timeline chart */
-  .chart { position: relative; }
-  .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
-  .chart .axis text { fill: var(--muted); font-size: 12px; }
-  .chart .gridline { stroke: var(--grid); stroke-width: 1; }
-  .chart .rowlabel { fill: var(--text); font-size: 13px; font-weight: 600; }
-  .chart .rowsub { fill: var(--muted); font-size: 12px; }
-  .chart .bar { fill: var(--bar); }
-  .chart .hit { fill: transparent; cursor: pointer; }
-  .chart .hit:focus { outline: none; }
-  .chart g.row.dim .bar { opacity: .35; }
-  .tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); box-shadow: 0 6px 24px rgba(16,24,40,.14); border-radius: 10px; padding: 10px 12px; font-size: 13px; min-width: 190px; opacity: 0; transform: translateY(4px); transition: opacity .12s, transform .12s; z-index: 5; }
-  .tip.show { opacity: 1; transform: none; }
-  .tip b { display: block; font-size: 13.5px; }
-  .tip span { color: var(--text-2); display: block; }
-  .roles { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 12px; }
+  .roles { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
   .roles li { display: grid; grid-template-columns: 170px 1fr; gap: 16px; padding-top: 12px; border-top: 1px solid var(--border); }
   .roles .when { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
   .roles .what b { display: block; }
   .roles .what span { color: var(--text-2); font-size: 14.5px; }
-  .sr-table { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
   .edu { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
   .edu-card { border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; background: var(--surface-2); }
@@ -168,7 +152,7 @@
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .reveal { opacity: 1; transform: none; transition: none; }
-    .project, .tip { transition: none; }
+    .project { transition: none; }
   }
 </style>
 </head>
@@ -315,11 +299,7 @@
 
   <section id="experience" class="reveal">
     <div class="panel">
-      <div class="sec-head"><h2>Career timeline</h2><p>Hover a bar for role and duration</p></div>
-      <div class="chart" id="timeline">
-        <div class="tip" id="tip" role="status" aria-live="polite"></div>
-      </div>
-      <table class="sr-table" id="timeline-table"><caption>Career timeline</caption><thead><tr><th>Company</th><th>Role</th><th>From</th><th>To</th></tr></thead><tbody></tbody></table>
+      <div class="sec-head"><h2>Career timeline</h2></div>
       <ul class="roles">
         <li><div class="when">Jan 2025 – Present</div><div class="what"><b>Senior Engineer · Nagarro</b><span>Tableau and Power BI dashboards for business KPIs, Matillion ETL from AWS S3 into Databricks and PostgreSQL, SQL quality checks, and data governance and lineage in Collibra.</span></div></li>
         <li><div class="when">Oct 2024 – Jan 2025</div><div class="what"><b>Senior Associate Consultant · Infosys</b><span>Client Tableau dashboards and reports; faster dashboards through optimized data sources, extracts and calculations.</span></div></li>
@@ -396,76 +376,6 @@
     });
   });
 
-  /* ---------- career timeline (Gantt) ---------- */
-  var today = new Date();
-  var jobs = [
-    { co: 'Nagarro', role: 'Senior Engineer', from: [2025, 0], to: null },
-    { co: 'Infosys', role: 'Senior Associate Consultant', from: [2024, 9], to: [2025, 0] },
-    { co: 'SRS Infoway', role: 'Senior Analyst', from: [2024, 7], to: [2024, 9] },
-    { co: 'Accenture', role: 'Application Development Associate', from: [2019, 9], to: [2021, 1] }
-  ];
-  var MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  function mIndex(ym) { return ym[0] * 12 + ym[1]; }
-  var nowYM = [today.getFullYear(), today.getMonth()];
-  function fmt(ym) { return ym ? MON[ym[1]] + ' ' + ym[0] : 'Present'; }
-  function dur(j) {
-    var m = mIndex(j.to || nowYM) - mIndex(j.from) + 1, y = Math.floor(m / 12), r = m % 12;
-    return (y ? y + (y > 1 ? ' yrs' : ' yr') : '') + (y && r ? ' ' : '') + (r ? r + (r > 1 ? ' mos' : ' mo') : '');
-  }
-
-  var tbody = document.querySelector('#timeline-table tbody');
-  jobs.forEach(function (j) { var tr = document.createElement('tr'); tr.innerHTML = '<td>' + j.co + '</td><td>' + j.role + '</td><td>' + fmt(j.from) + '</td><td>' + fmt(j.to) + '</td>'; tbody.appendChild(tr); });
-
-  var host = document.getElementById('timeline'), tip = document.getElementById('tip');
-  var NS = 'http://www.w3.org/2000/svg';
-  function el(n, a) { var e = document.createElementNS(NS, n); for (var k in a) e.setAttribute(k, a[k]); return e; }
-
-  function draw() {
-    var old = host.querySelector('svg'); if (old) old.remove();
-    var W = Math.max(host.clientWidth, 300), narrow = W < 560;
-    var L = narrow ? 92 : 190, R = 12, T = 8, rowH = narrow ? 40 : 46, barH = 14;
-    var H = T + jobs.length * rowH + 26;
-    var y0 = 2019, y1 = nowYM[0] + 1;
-    var x = function (ym) { return L + (mIndex(ym) - y0 * 12) / ((y1 - y0) * 12) * (W - L - R); };
-    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, width: W, height: H, role: 'img', 'aria-label': 'Career timeline from 2019 to present' });
-
-    var ax = el('g', { class: 'axis' });
-    for (var yr = y0; yr <= y1; yr++) {
-      var gx = x([yr, 0]);
-      ax.appendChild(el('line', { class: 'gridline', x1: gx, x2: gx, y1: T, y2: H - 22 }));
-      if (!narrow || yr % 2 === 1 || yr === y1) { var t = el('text', { x: gx, y: H - 6, 'text-anchor': 'middle' }); t.textContent = yr; ax.appendChild(t); }
-    }
-    svg.appendChild(ax);
-
-    jobs.forEach(function (j, i) {
-      var cy = T + i * rowH + rowH / 2;
-      var g = el('g', { class: 'row' });
-      var lab = el('text', { class: 'rowlabel', x: 0, y: narrow ? cy + 4 : cy - 2 }); lab.textContent = j.co; g.appendChild(lab);
-      if (!narrow) { var sub = el('text', { class: 'rowsub', x: 0, y: cy + 14 }); sub.textContent = dur(j); g.appendChild(sub); }
-      var x0 = x(j.from), x1 = x([ (j.to || nowYM)[0], (j.to || nowYM)[1] + 1 ]);
-      var bw = Math.max(x1 - x0, 6);
-      g.appendChild(el('rect', { class: 'bar', x: x0, y: cy - barH / 2, width: bw, height: barH, rx: 4 }));
-      var hit = el('rect', { class: 'hit', x: Math.min(x0 - 6, x0), y: cy - rowH / 2, width: bw + 12, height: rowH, tabindex: 0, 'aria-label': j.co + ', ' + j.role + ', ' + fmt(j.from) + ' to ' + fmt(j.to) });
-      function show(ev) {
-        g.parentNode.querySelectorAll('g.row').forEach(function (r) { r.classList.toggle('dim', r !== g); });
-        tip.innerHTML = '<b>' + j.role + '</b><span>' + j.co + '</span><span>' + fmt(j.from) + ' – ' + fmt(j.to) + ' · ' + dur(j) + '</span>';
-        var hb = host.getBoundingClientRect(), tw = tip.offsetWidth;
-        var px = ev && ev.clientX ? ev.clientX - hb.left : x0 + bw / 2;
-        tip.style.left = Math.min(Math.max(px - tw / 2, 0), hb.width - tw) + 'px';
-        tip.style.top = (cy - rowH / 2 - tip.offsetHeight - 2) + 'px';
-        tip.classList.add('show');
-      }
-      function hide() { tip.classList.remove('show'); g.parentNode.querySelectorAll('g.row').forEach(function (r) { r.classList.remove('dim'); }); }
-      hit.addEventListener('mousemove', show); hit.addEventListener('mouseleave', hide);
-      hit.addEventListener('focus', function () { show(); }); hit.addEventListener('blur', hide);
-      hit.addEventListener('touchstart', function (e) { show(e.touches[0]); }, { passive: true });
-      g.appendChild(hit);
-      svg.appendChild(g);
-    });
-    host.insertBefore(svg, tip);
-  }
-  draw();
-  var rt; addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(draw, 120); });
 })();
 </script>
 </body>
